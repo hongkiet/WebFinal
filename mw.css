@@ -1,0 +1,51 @@
+html,body {
+    height: 100%;
+}
+
+.header1 {
+    background-color: #0067ac;
+    color: white;
+    padding: 10px;
+    min-height: 100vh;
+    max-height: 100vh;
+    justify-content: center;
+    position: fixed; 
+    top: 0; 
+    left: 0;
+    z-index: 9999; 
+}
+
+.tdtlogo{
+    width: 66%;
+    display: block;
+    margin: auto;
+    
+}
+
+.content {
+    margin-left: 16.66%;
+    padding: 20px;
+    background-color: #de412e;
+    height: 2000px;
+}
+.navbar{
+    background-color: #f11c05;
+}
+div{
+    margin-bottom: 10px;
+}
+button{
+    display: block; 
+    margin: auto;
+    text-align: center;
+}
+.fixed-header {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    width: 16.666%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+  }
