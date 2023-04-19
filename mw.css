@@ -3,9 +3,10 @@ html,body {
 }
 *{
     color: aliceblue;
+    font-family: Helvetica;
 }
 .header1 {
-    background-color: #000000;
+    background-color: #dbd0d0;
     color: white;
     padding: 10px;
     min-height: 100vh;
@@ -16,24 +17,37 @@ html,body {
     left: 0;
     z-index: 9999; 
 }
+.logoakk{
+    /* border: 3px solid white; */
+    padding: 30px;
+    max-width: 66%;
+}
+.logoakk:hover {
+    transform: scale(1.3); /* phóng to ảnh */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* đổ bóng */
+    transition: transform 400ms;
+}
 
 .content {
     margin-left: 16.66%;
     padding: 20px;
-    background-color: #3b3b3b;
-    height: 2000px;
+    background-color: rgb(255, 0, 179);
+    height: var(--header1-height);
+    user-select: none;
 }
+.home::before {  
+    transform: scaleX(0);
+    transform-origin: bottom right;
+}
+
 .navbar{
-    background-color: #000000;
+    background-color: var(--card-color);
+    color: aqua;
 }
 div{
     margin-bottom: 10px;
 }
-button{
-    display: block; 
-    margin: auto;
-    text-align: center;
-}
+
 .fixed-header {
     position: fixed;
     top: 10px;
@@ -42,6 +56,8 @@ button{
     min-height: 100%;
     display: flex;
     flex-direction: column;
+    text-align: center;
+    align-items: center;
 }
 .focus{
     display:  inline-flex;
@@ -53,7 +69,6 @@ button{
     width: 200px;
     max-height: 400px;
     border: 1px solid black;
-    border-radius: 5%;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     flex: 1;
     justify-content: center;
@@ -67,15 +82,19 @@ button{
     cursor: pointer;
     position: relative;
 }
+.card:hover{
+    transform: scale(1.05);
+}
 .card:hover:before {
     opacity: 0.5;
+    
   }
   
 .card:before {
     background: linear-gradient(
       
       transparent 5%,
-      rgb(44, 133, 27) 50%,
+      #7D4F6E 50%,
       transparent 99%
     );
     border-radius: 0;
@@ -85,7 +104,11 @@ button{
     position: absolute;
     transition: opacity 400ms;
     z-index: 0;
-  }
+    
+}
+.card:active {
+    cursor: none;
+}
 .card-img-top{
     margin: 10px;
     border-radius: 5%;
@@ -96,4 +119,4 @@ button{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-  }
+}
