@@ -1,0 +1,99 @@
+
+#login-form{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+  }
+  .login-card {
+    cursor: pointer;
+    min-width: 350px;
+    min-height: 500px;
+    background-color: transparent;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .login-card:hover {
+    transform: none; 
+  }
+  
+  .login-card:hover:before {
+    opacity: 0;
+  }
+  
+  .login-card:before {
+    display: none; 
+  }
+  
+  .login-card:active {
+    cursor: default; 
+  }
+  
+  #register-form{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .register-card {
+    cursor: pointer;
+    min-width: 425px;
+    min-height: 725px;
+    /* height: fit-content; */
+    background-color: transparent;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  
+  .register-card:hover {
+    transform: none; 
+  }
+  
+  .register-card:hover:before {
+    opacity: 0;
+  }
+  
+  .register-card:before {
+    display: none; 
+  }
+  
+  .register-card:active {
+    cursor: default; 
+  }
+  #forget-form{
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+  }
+  .forget-card {
+    cursor: pointer;
+    min-width: 350px;
+    min-height: 500px;
+    background-color: transparent;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .forget-card:hover {
+    transform: none; 
+  }
+  
+  .forget-card:hover:before {
+    opacity: 0;
+  }
+  
+  .forget-card:before {
+    display: none; 
+  }
+  
+  .forget-card:active {
+    cursor: default; 
+  }

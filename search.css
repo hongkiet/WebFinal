@@ -1,0 +1,8 @@
+.No-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    margin-top: 20%;
+    font-weight: 600;
+}

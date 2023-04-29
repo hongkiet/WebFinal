@@ -1,5 +1,6 @@
 html,body {
     height: 100%;
+    background-color: black;
 }
 *{
     color: aliceblue;
@@ -11,11 +12,7 @@ html,body {
     padding: 10px;
     min-height: 100vh;
     max-height: 100vh;
-    /* justify-content: center; */
     position: fixed; 
-    /* top: 0;  */
-    /* left: 0; */
-    /* z-index: 9999;  */
 }
 .logoakk{
     /* border: 3px solid white; */
@@ -27,16 +24,6 @@ html,body {
     box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* đổ bóng */
     transition: transform 400ms;
 }
-
-.content {
-    margin-left: 16.66%;
-    padding: 20px;
-    background-color: rgb(255, 0, 179);
-    height: fit-content;
-    user-select: none;
-    margin-bottom: 0;
-}
-
 
 div{
     margin-bottom: 10px;
@@ -71,6 +58,6 @@ div{
     color: antiquewhite;
 }
 #header-function > a:hover > i {
-    color: antiquewhite; /* thay đổi màu icon */
+    color: antiquewhite;
 }
 
