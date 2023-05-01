@@ -40,8 +40,9 @@
             $name = 'unknown';
         }
         $hash = password_hash($pass,PASSWORD_DEFAULT);
+        // $rand = random_int(1000, 2000);
+        // $token = md5($email .'+'.$rand);
         $token = createToken($email);
-
         $sql = 'insert into account(username, name, email, password, activate_token) values (?,?,?,?,?)';
 
         $conn = connect_to_db();
@@ -115,13 +116,13 @@
             $mail->CharSet = 'UTF-8';                                        //Send using SMTP
             $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = 'hongkiet0502@gmail.com';                     //SMTP username
-            $mail->Password   = 'tafnkbhwmdvtizwd';                               //SMTP password
+            $mail->Username   = 'akkmusic23@gmail.com';                     //SMTP username
+            $mail->Password   = 'viyksfznxoewlvze';                               //SMTP password
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
             $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
             //Recipients
-            $mail->setFrom('hongkiet0502@gmail.com', 'Kiet dzai');
+            $mail->setFrom('akkmusic23@gmail.com', 'AKK Music');
             $mail->addAddress($email, 'Người nhận');     //Add a recipient
             //$mail->addAddress('ellen@example.com');               //Name is optional
             //$mail->addReplyTo('info@example.com', 'Information');
@@ -134,7 +135,7 @@
 
             //Content
             $mail->isHTML(true);                                  //Set email format to HTML
-            $mail->Subject = 'Khôi phục mật khẩu của bạn!';
+            $mail->Subject = 'Reset your password!';
             $mail->Body    = "Click <a href='http://localhost/reset_password.php?=email=$email&token=$token'>vào đây</a> để khôi phục tài khoản của bạn";
             //$mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
@@ -170,39 +171,157 @@
         return array('code'=>0,'message'=>'Account activated!');
     }
 
-    function resetPassword($email){
-        if (!is_email_exists($email)){
-            return array('code'=>1,'error'=>'Email does not exist!');
-        }
-        $rand_int = random_int(1000,2000);
-        $token = md5($email.'+'.$rand_int);
-        $sql = "update reset_token set token = ? where email = ?";
+    // function resetPassword($email){
 
-        $conn = connect_to_db();
-        $stm = $conn->prepare($sql);
-        $stm->bind_param('ss',$token,$email);
+    //     if (!is_email_exists($email)){
+    //         return array('code'=>1,'error'=>'Email does not exist!');
+    //     }
+    //     $rand_int = random_int(1000,2000);
+    //     $token = md5($email.'+'.$rand_int);
+    //     $sql = "update reset_token set token = ? where email = ?";
 
-        if ($stm->execute()){
-            return array('code'=>2,'error'=>'Can not execute command!');
-        }
-        if ($stm->affected_rows == 0){
-            $exp = time() + 3600 * 24;
-            $sql = 'insert into reset_token values (?,?,?)';
-            $stm = $conn->prepare($sql);
-            $stm->bind_param('ssi',$email,$token,$exp);
+    //     $conn = connect_to_db();
+    //     $stm = $conn->prepare($sql);
+    //     $stm->bind_param('ss',$token,$email);
 
-            if ($stm->execute()){
-                return array('code'=>2,'error'=>'Can not execute command!');
-            }
-        }
-        $success = sendResetEmail($email, $token);
-        return array('code'=>0,'success'=>$success);
-    }
+    //     if ($stm->execute()){
+    //         return array('code'=>2,'error'=>'Can not execute command!');
+    //     }
+    //     if ($stm->affected_rows == 0){
+    //         $exp = time() + 3600 * 24;
+    //         $sql = 'insert into reset_token values (?,?,?)';
+    //         $stm = $conn->prepare($sql);
+    //         $stm->bind_param('ssi',$email,$token,$exp);
+
+    //         if ($stm->execute()){
+    //             return array('code'=>2,'error'=>'Can not execute command!');
+    //         }
+    //     }
+    //     $success = sendResetEmail($email, $token);
+    //     return array('code'=>0,'success'=>$success);
+    // }
     
     function showSuccessMessage() {
         echo "<script>alert('Register successfully! Email for activatation will be send!')</script>";
         header("Location: main.php");
         exit;
-      }
+    }
+
+    function showSuccessMessageRSPW() {
+        echo "<script>alert('Reset password success!')</script>";
+        header("Location: main.php");
+        exit;
+    }
     
+      function ForgotPassword($email) {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        if(!isset($_SESSION['email'])) {
+            $_SESSION['email'] = $email;
+        }
+        if(is_email_exists($email)) {  
+            $conn = connect_to_db();
+            $sql = "Select * from reset_token where email = ?";
+            
+            $stm = $conn->prepare($sql);
+            $stm->bind_param('s', $email);
+
+            
+
+            if(!$stm->execute()) {
+                die('Query error: ' . $stm->error);
+            }
+
+            $result = $stm->get_result();
+            
+            $rand = random_int(1000, 2000);
+            $token = md5($email .'+'.$rand);
+
+            $expire = time() + 3600 * 24;
+            if($result->num_rows > 0) {
+                $update = "UPDATE reset_token SET token = ? WHERE email = ?";
+                $stm = $conn->prepare($update);
+                $stm->bind_param('ss', $token, $email);
+
+                if(!$stm->execute()) {
+                    return array('code' => 1, 'error' => 'Cannot execute Command');
+                }
+                sendRecoveryEmail($email, $token);
+                return array('code' => 0, 'error' => 'Your requirement is accepted!.');
+            } else {
+                $sql = "INSERT INTO reset_token (email, token, expire_on) VALUES (?, ?, ?)";
+                $stm = $conn->prepare($sql);
+                $stm->bind_param('sss', $email, $token, $expire);
+
+                if(!$stm->execute()) {
+                    return array('code' => 1, 'error' => 'Cannot execute Command');
+                }
+                sendRecoveryEmail($email, $token);
+                return array('code' => 0, 'error' => 'Your requirement is accepted!.');
+            }
+            
+        } else {
+            return array('code' => 1, 'error' => 'An error Occured');
+        }
+    }
+
+    function sendRecoveryEmail($email, $token) {
+        //Create an instance; passing `true` enables exceptions
+        $mail = new PHPMailer(true);
+
+        try {
+            //Server settings
+            // $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
+            $mail->isSMTP();                                            //Send using SMTP
+            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+            $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+            $mail->Username   = 'akkmusic23@gmail.com';                     //SMTP username
+            $mail->Password   = 'viyksfznxoewlvze';                               //SMTP password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;            //Enable implicit TLS encryption
+            $mail->Port       = 587;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+            //Recipients
+            $mail->setFrom('akkmusic23@gmail.com', 'AKK Music');
+            $mail->addAddress($email, 'Reciever');     //Add a recipient
+
+            //Content
+            $mail->isHTML(true);                                  //Set email format to HTML
+            $mail->Subject = 'Recover Account';
+            $mail->Body    = "Click <a href='http://localhost/reset_password.php?email=$email&token=$token'> here </a> to change your password.";
+            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    function RecoverPassword($email, $pass, $comfirm_pass) {
+        if(is_email_exists($email)) {
+            $conn = connect_to_db();
+            
+                $hash = password_hash($pass, PASSWORD_DEFAULT);
+                $rand = random_int(1000, 2000);
+                $token = md5($email .'+'.$rand);
+                $sql = "UPDATE account set password = ?, activate_token = ? WHERE email = ?";
+                $stm = $conn->prepare($sql);
+                $stm->bind_param('sss', $hash, $token, $email);
+
+                if(!$stm->execute()) {
+                    return array('code' => 1, 'error' => 'Cannot execute Command');
+                }
+            if(strlen($pass) < 6) {
+                return array('code' => 4, 'error' => 'Password must be at least 6 characters!.');
+            }
+            if($pass != $comfirm_pass) {
+                return array('code' => 3, 'error' => 'Password does not match!.');
+            }
+            return array('code' => 0, 'error' => 'Your requirement is accepted!.');
+        } else {
+            return array('code' => 2, 'error' => 'Invalid Email!.');
+        }
+    }
+
 ?>
